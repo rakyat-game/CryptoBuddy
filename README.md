@@ -1,16 +1,28 @@
-# crypto_buddy
+# CryptoBuddy
 
-A new Flutter project.
+CryptoBuddy is an app that tracks prices of crypto currencies and allows user's to build their own portfolios
 
-## Getting Started
+## Planned Features
 
-This project is a starting point for a Flutter application.
+### Home page
+  - balance
+  - search coin
+  - watch list
+  - settings
+  - converter
 
-A few resources to get you started if this is your first Flutter project:
+### Coin Tracker page
+  - list crypto currencies 
+  - click on coin to show detailed info, like graphs, info text etc.
+  -  sort coins by market cap,category, name, etc.
+  -  "show more" function
+  -  search function
+  -  ask ChatGPT
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Portfolio page
+  - user balance
+  - graph
+  - coin holdings
+  - add/remove function
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### News page
