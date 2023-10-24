@@ -5,24 +5,25 @@ CryptoBuddy is an app that tracks prices of crypto currencies and allows user's 
 ## Planned Features
 
 ### Home page
-  - balance
+  - show balance
   - search coin
   - watch list
-  - settings
-  - converter
+  - open settings page
+  - converter for crypto currencies
 
 ### Coin Tracker page
   - list crypto currencies 
-  - click on coin to show detailed info, like graphs, info text etc.
+  - click on crypto currency to show detailed info, like graphs, info text etc.
   -  sort coins by market cap,category, name, etc.
-  -  "show more" function
+  -  "show more" crypto currencies option
   -  search function
-  -  ask ChatGPT
 
 ### Portfolio page
   - user balance
-  - graph
-  - coin holdings
-  - add/remove function
+  - display graph of user balance
+  - show coin holdings
+  - add/remove coin function
 
 ### News page
+
+### CoinGecko API limitations
