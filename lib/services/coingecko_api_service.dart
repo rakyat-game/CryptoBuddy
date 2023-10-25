@@ -13,20 +13,12 @@ class CoingeckoApiService {
     return coinIDList.data;
   }
 
-  Future getCoinsByMarketCap(
-      {numberOfCoins = 50, currency = "eur", String? category}) async {
-    final coinList = await (category == null
-        ? _api.coins.listCoinMarkets(
-            vsCurrency: currency,
-            order: "market_cap_desc",
-            itemsPerPage: numberOfCoins,
-            page: 1)
-        : _api.coins.listCoinMarkets(
-            vsCurrency: currency,
-            category: category,
-            order: "market_cap_desc",
-            itemsPerPage: numberOfCoins,
-            page: 1));
+  Future getCoins({currency = "eur", itemsPerPage = 1000, page = 1}) async {
+    final coinList = await _api.coins.listCoinMarkets(
+        vsCurrency: currency,
+        order: "gecko_desc", // market_cap_desc
+        itemsPerPage: itemsPerPage,
+        page: page);
     return coinList.data;
   }
 }

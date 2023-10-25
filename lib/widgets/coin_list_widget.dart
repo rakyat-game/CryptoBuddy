@@ -14,56 +14,93 @@ class CoinList extends StatelessWidget {
         var coin = coinData[index];
         return Stack(
           children: [
-            ListTile(
-              leading: Image.network(
-                coin.image ?? 'default_image_url',
-                width: 40,
-                height: 40,
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(coin.name),
-                  Text(
-                    '${coin.currentPrice} €',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
-              ),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(coin.symbol),
-                  Text(
-                      '${coin.priceChangePercentage24h != null && coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h?.toStringAsFixed(2) ?? 0}%')
-                ],
-              ),
+            InkWell(
               onTap: () {
                 // Navigate to detail page
               },
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
               child: Container(
-                height: 1,
-                color: Colors.grey.shade500, // Line color
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(.4),
-                        spreadRadius: 1,
-                        blurRadius: .5,
-                        offset:
-                            const Offset(2, 1), // changes position of shadow
+                padding: const EdgeInsets.only(
+                  left: 24,
+                  right: 24,
+                  top: 14,
+                  bottom: 0, // Increase or decrease as needed
+                ),
+                child: Row(
+                  children: [
+                    // Left Section
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            coin.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(coin.symbol),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    // Center Section
+                    SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: Image.network(
+                        coin.image ?? 'default_image_url',
+                      ),
+                    ),
+                    // Right Section
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${coin.currentPrice} €',
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            '${coin.priceChangePercentage24h != null && coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h?.toStringAsFixed(2) ?? "0"}%',
+                            style: TextStyle(
+                              color: coin.priceChangePercentage24h != null &&
+                                      coin.priceChangePercentage24h! > 0
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            )
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24), // Set padding here
+              child: Divider(
+                color: Colors.grey,
+                thickness: 0.5,
+              ),
+            ),
+            // Positioned(
+            //   //bottom: 4,
+            //   left: 20,
+            //   right: 20,
+            //   child: Container(
+            //     height: 1,
+            //     color: Colors.grey.shade500,
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         boxShadow: [
+            //           BoxShadow(
+            //             color: Colors.grey.withOpacity(.4),
+            //             spreadRadius: 1,
+            //             blurRadius: .5,
+            //             offset: const Offset(3, 1),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         );
       },
