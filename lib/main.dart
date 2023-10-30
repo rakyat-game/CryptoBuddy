@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:crypto_buddy/pages/coin_tracking_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   /* HttpOverrides is needed to fix certificate exception on old Android-Version 7.0 (my physical test device is a Samsung 5A 2016)
@@ -16,12 +17,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CryptoBuddy',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-        useMaterial3: true,
-      ),
+          primaryColor: Colors.white,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          useMaterial3: true,
+          textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+              const TextStyle(color: Colors.black),
+            ),
+          ))),
       home: const CoinTrackingPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
