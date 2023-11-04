@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 import '../utils/sorting_metrics.dart';
-import '../widgets/coin_list_widget.dart';
-import 'coin_tracking_controller.dart';
+import '../widgets/coin_list.dart';
+import '../widgets/custom_button.dart';
+import 'coin_tracker_controller.dart';
 
 class CoinTrackingPage extends StatefulWidget {
   const CoinTrackingPage({super.key});
@@ -17,35 +19,31 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-          0xFFF8F8FF), //const Color(0xFFF5F5F5), //Colors.grey.shade200,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: Container(
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.grey,
-                width: 1.5,
+                color: Colors.black,
+                width: 1,
               ),
             ),
           ),
           child: AppBar(
-            backgroundColor:
-                const Color(0xFFF8F8FF), //Colors.blueGrey.shade200,
             title: Row(
               children: [
                 Flexible(
                   child: SizedBox(
-                    height: 40.0,
+                    height: 32.0,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      padding: const EdgeInsets.only(bottom: 4, top: 2),
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(.2),
+                                color: Colors.white.withRed(10),
                                 spreadRadius: .3,
                                 blurRadius: .3,
                                 offset: const Offset(0, 1),
@@ -58,16 +56,14 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                             });
                           },
                           decoration: InputDecoration(
-                            hintText: 'Search...',
                             filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 1),
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.only(top: 2),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none,
                             ),
-                            prefixIcon: const Icon(Icons.search),
+                            prefixIcon: const Icon(LineIcons.search, size: 20),
                           ),
                         ),
                       ),
@@ -79,19 +75,33 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
             actions: [
               IconButton(
                 icon: const Icon(
-                  Icons.star_border,
+                  LineIcons.sort,
                   //color: Colors.white,
                 ),
-                onPressed: controller.reloadData,
+                onPressed: () {
+                  //TODO
+                },
+              ),
+              IconButton(
+                icon: const Icon(
+                  LineIcons.star,
+                  //color: Colors.white,
+                ),
+                onPressed: () {
+                  //TODO
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: IconButton(
                   icon: const Icon(
-                    Icons.refresh,
+                    LineIcons.syncIcon,
                     //color: Colors.white,
                   ),
-                  onPressed: controller.reloadData,
+                  onPressed: () async {
+                    await controller.reloadData();
+                    setState(() {});
+                  },
                 ),
               ),
             ],
@@ -99,7 +109,7 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
               preferredSize: const Size.fromHeight(40),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(bottom: 7),
+                padding: const EdgeInsets.only(bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -108,10 +118,12 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                           horizontal: 10, vertical: 6),
                       margin: const EdgeInsets.only(left: 10, right: 5),
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(.2),
+                            color: Colors.white
+                                .withRed(10), //Colors.black.withOpacity(.2),
                             spreadRadius: .3,
                             blurRadius: .3,
                             offset: const Offset(0, 1),
@@ -134,7 +146,8 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                         itemBuilder: (BuildContext context) {
                           return SortingMetric.values
                               .where((SortingMetric metric) =>
-                                  metric != SortingMetric.marketCap)
+                                  metric != SortingMetric.marketCap &&
+                                  metric != SortingMetric.price)
                               .map((SortingMetric metric) {
                             return PopupMenuItem<SortingMetric>(
                               value: metric,
@@ -162,51 +175,21 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            controller
-                                .sortAndChangeOrder(SortingMetric.marketCap);
-                            controller.lastClickedSortingButton =
-                                'marketCapButton';
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                            return controller.lastClickedSortingButton ==
-                                    'marketCapButton'
-                                ? Colors.blueGrey.shade200
-                                : Colors.white; // Conditional background color
-                          }),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            const EdgeInsets.symmetric(
-                                horizontal: 12.0, vertical: 0),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Market Cap',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Icon(
-                              controller.isMarketCapAscending
-                                  ? Icons.keyboard_arrow_down
-                                  : Icons.keyboard_arrow_up,
-                              size: 18.0,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
+                    CustomButton(
+                      onTap: () {
+                        setState(() {
+                          controller
+                              .sortAndChangeOrder(SortingMetric.marketCap);
+                          controller.lastClickedSortingButton =
+                              'marketCapButton';
+                        });
+                      },
+                      label: 'Market Cap',
+                      isActive: controller.lastClickedSortingButton ==
+                          'marketCapButton',
+                      icon: controller.isMarketCapAscending
+                          ? Icons.keyboard_arrow_down
+                          : Icons.keyboard_arrow_up,
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -217,8 +200,8 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                                 controller.priceChangeInterval);
                             controller.lastClickedSortingButton =
                                 'priceChangeButton';
-                            controller.lastPriceChangeSortOrder = controller
-                                .isPriceChangeAscending; // Add this line
+                            controller.lastPriceChangeSortOrder =
+                                controller.isPriceChangeAscending;
                           });
                         },
                         style: ButtonStyle(
@@ -228,7 +211,7 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                             return controller.lastClickedSortingButton ==
                                     'priceChangeButton'
                                 ? Colors.blueGrey.shade200
-                                : Colors.white;
+                                : const Color(0xFFF8F8FF);
                           }),
                           padding:
                               MaterialStateProperty.all<EdgeInsetsGeometry>(
@@ -255,48 +238,19 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            controller
-                                .sortAndChangeOrder(SortingMetric.marketCap);
-                            controller.lastClickedSortingButton =
-                                'marketCapButton';
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                            return controller.lastClickedSortingButton ==
-                                    'marketCapButton'
-                                ? Colors.blueGrey.shade200
-                                : Colors.white; // Conditional background color
-                          }),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            const EdgeInsets.symmetric(horizontal: 13.0),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('Price',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            Icon(
-                              controller.isPriceChangeAscending
-                                  ? Icons.keyboard_arrow_down
-                                  : Icons.keyboard_arrow_up,
-                              size: 18.0,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
+                    CustomButton(
+                      onTap: () {
+                        setState(() {
+                          controller.sortAndChangeOrder(SortingMetric.price);
+                          controller.lastClickedSortingButton = 'priceButton';
+                        });
+                      },
+                      label: 'Price',
+                      isActive:
+                          controller.lastClickedSortingButton == 'priceButton',
+                      icon: controller.isPriceAscending
+                          ? Icons.keyboard_arrow_down
+                          : Icons.keyboard_arrow_up,
                     ),
                   ],
                 ),

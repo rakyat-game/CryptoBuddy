@@ -1,5 +1,5 @@
 name: crypto_buddy
-description:  CryptoBuddy is an app that tracks data of crypto currencies and allows users to freely 
+description:  CryptoBuddy is an app that tracks data of crypto currencies and allows users to 
   create their own crypto portfolios
 
 publish_to: 'none'
@@ -12,9 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  coingecko_api: ^1.1.1+1
   google_fonts: ^6.1.0
+  google_nav_bar: ^5.0.6
+  line_icons: ^2.0.2
+  coingecko_api: ^1.1.1+1
+  chat_gpt_sdk: ^2.2.5
 
 dev_dependencies:
   flutter_test:
@@ -23,5 +25,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - images/

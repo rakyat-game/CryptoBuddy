@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
 
-import '/services/coingecko_api_service.dart';
+import '/services/coingecko_api.dart';
 
 class CoinTrackingController {
   final CoingeckoApiService apiService = CoingeckoApiService();
@@ -15,11 +15,14 @@ class CoinTrackingController {
   bool isMarketCapAscending = false;
   bool isPriceChangeAscending = false;
   bool lastPriceChangeSortOrder = false;
+  bool isPriceAscending = false;
 
   CoinTrackingController() {
     coinFuture = apiService.getCoins();
     lastRefreshTime = DateTime.now();
   }
+
+  Future get coinF => coinFuture;
 
   Future<void> reloadData() async {
     final timeOfRefresh = DateTime.now();
@@ -27,7 +30,7 @@ class CoinTrackingController {
       coinFuture = apiService.getCoins();
       lastRefreshTime = timeOfRefresh;
     } else {
-      print("Coin data can only be refreshed every 60 seconds");
+      // TODO: Show popup if user tries to refresh too often
     }
   }
 
@@ -54,6 +57,10 @@ class CoinTrackingController {
           compareA = a.marketCap;
           compareB = b.marketCap;
           break;
+        case SortingMetric.price:
+          compareA = a.currentPrice;
+          compareB = b.currentPrice;
+          break;
         case SortingMetric.hour:
           compareA = a.priceChangePercentage1hInCurrency;
           compareB = b.priceChangePercentage1hInCurrency;
@@ -69,6 +76,10 @@ class CoinTrackingController {
         case SortingMetric.month:
           compareA = a.priceChangePercentage30dInCurrency;
           compareB = b.priceChangePercentage30dInCurrency;
+          break;
+        case SortingMetric.sixMonths:
+          compareA = a.priceChangePercentage200dInCurrency;
+          compareB = b.priceChangePercentage200dInCurrency;
           break;
         case SortingMetric.year:
           compareA = a.priceChangePercentage1yInCurrency;
@@ -94,6 +105,9 @@ class CoinTrackingController {
       if (metric == SortingMetric.marketCap) {
         sortCoins(coinData, metric, isMarketCapAscending);
         isMarketCapAscending = !isMarketCapAscending;
+      } else if (metric == SortingMetric.price) {
+        sortCoins(coinData, metric, isPriceAscending);
+        isPriceAscending = !isPriceAscending;
       } else {
         sortCoins(coinData, metric, isPriceChangeAscending);
         isPriceChangeAscending = !isPriceChangeAscending;
