@@ -3,7 +3,28 @@
 CryptoBuddy provides real-time data of popular digital currencies
 and allows users to build their own portfolios.
 Data is fetched via the [CoinGecko API](https://www.coingecko.com/en/api) 
-using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. 
+using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. Developed by Steven Schmitt(2025448@stud.hs-mannheim.de).
+
+---
+
+### Supported platforms
+
+- **Android**
+- **Linux**
+- **Windows**
+
+---
+
+### Installation
+
+- Install Flutter and Git
+- Clone the repo: ```git clone https://gitty.informatik.hs-mannheim.de/2025448/CryptoBuddy.git```
+- Fetch necessary dependencies inside the downloaded folder: ```flutter pub get```
+- Run the app: ```flutter run -d os```, where ```os``` &isin; {linux, windows, android}\
+The app's UI is primarily designed for android. For android, use Android Studio and either connect a physical device or\
+set up an emulator.
+
+---
 
 ### Currently implemented features
 
@@ -22,6 +43,7 @@ using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper.
 - **Detailed Coin Information**: Upon selecting a specific cryptocurrency from the list, users
     are directed to a dedicated page displaying extensive information about the coin.
 
+---
 
 ### On the horizon
 
@@ -50,9 +72,13 @@ These functionalities are 'nice-to-have' and might not be implemented depending 
 - **Dedicated Home Page**: Gives access to the settings page, shows current portfolio value, a currency converter
     and  favored cryptocurrencies.
 
+---
+
 ### CoinGecko API limitations
 
 This app makes use of the free Demo(Beta) plan. Plans can be viewed [here](https://www.coingecko.com/en/api/pricing). <br>
 
-Max API calls per month: 10k <br>
-Max API calls per minute: 30
+Max API calls per month: 10.000\
+Max API calls per minute: 30\
+Data freshness: 60 seconds
+

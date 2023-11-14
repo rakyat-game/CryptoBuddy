@@ -1,7 +1,11 @@
 import 'package:coingecko_api/data/market.dart';
 import 'package:coingecko_api/data/market_chart_data.dart';
-import 'package:crypto_buddy/pages/coin_tracker_controller.dart';
+import 'package:crypto_buddy/models/crypto_asset.dart';
+import 'package:crypto_buddy/models/portfolio_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/coin_tracker_controller.dart';
 
 class CoinInfoPage extends StatefulWidget {
   final Market coin;
@@ -14,13 +18,22 @@ class CoinInfoPage extends StatefulWidget {
 }
 
 class _CoinInfoPageState extends State<CoinInfoPage> {
-  late Future<Map<String, List<MarketChartData>>> _dataFuture;
+  late Future<Map<String, List<MarketChartData>>> _sparkLineData;
 
   @override
   void initState() {
     super.initState();
-    _dataFuture =
+    _sparkLineData =
         widget.controller.apiService.getSparkLineData(coinId: widget.coin.id);
+  }
+
+  void _buyAsset() {
+    final portfolio = Provider.of<PortfolioModel>(context, listen: false);
+    final assetToBuy = CryptoAsset(
+      coin: widget.coin,
+      quantity: 1,
+    );
+    portfolio.buyAsset(assetToBuy);
   }
 
   @override
@@ -38,9 +51,13 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
             Text('Current price: ${widget.coin.currentPrice}'),
             Text('24h Price Change: '
                 '${widget.coin.priceChangePercentage24hInCurrency?.toStringAsFixed(2)}'),
+            ElevatedButton(
+              onPressed: _buyAsset,
+              child: const Text('Buy coin, quantity: 1'),
+            ),
             const Text('Spark Line data for chart building:'),
             FutureBuilder<Map<String, List<MarketChartData>>>(
-              future: _dataFuture,
+              future: _sparkLineData,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -66,13 +83,6 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
                 }
               },
             ),
-            const Text('TODO buttons to change time interval'),
-            const Text('TODO Highest and lowest value over time interval'),
-            const Text('TODO buy and sell'),
-            Text('Market Cap: ${widget.coin.marketCap}'),
-            Text('Rank By Market Cap: ${widget.coin.marketCapRank}'),
-            Text('Circulating Supply: ${widget.coin.circulatingSupply}'),
-            Text('Max Supply: ${widget.coin.maxSupply}'),
           ],
         ),
       ),

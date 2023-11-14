@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
+import 'package:flutter/material.dart';
 
 import '/services/coingecko_api.dart';
 
@@ -16,13 +17,13 @@ class CoinTrackingController {
   bool isPriceChangeAscending = false;
   bool lastPriceChangeSortOrder = false;
   bool isPriceAscending = false;
+  bool isSortingBarVisible = false;
+  Color refreshButtonColor = Colors.grey.shade800;
 
   CoinTrackingController() {
     coinFuture = apiService.getCoins();
     lastRefreshTime = DateTime.now();
   }
-
-  Future get coinF => coinFuture;
 
   Future<void> reloadData() async {
     final timeOfRefresh = DateTime.now();

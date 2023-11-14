@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class SortingButton extends StatelessWidget {
   final VoidCallback onTap;
   final String label;
   final bool isActive;
   final IconData? icon;
 
-  const CustomButton({
+  const SortingButton({
     super.key,
     required this.onTap,
     required this.label,

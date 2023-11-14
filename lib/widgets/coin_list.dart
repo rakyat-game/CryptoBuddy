@@ -1,7 +1,7 @@
 import 'package:coingecko_api/data/market.dart';
-import 'package:crypto_buddy/pages/coin_info_page.dart';
-import 'package:crypto_buddy/pages/coin_tracker_controller.dart';
+import 'package:crypto_buddy/controllers/coin_tracker_controller.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
+import 'package:crypto_buddy/views/coin_info_page.dart';
 import 'package:flutter/material.dart';
 
 import '../services/openai_api.dart';
