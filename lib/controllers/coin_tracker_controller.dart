@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
+import 'package:crypto_buddy/widgets/popup_message.dart';
 import 'package:flutter/material.dart';
 
 import '/services/coingecko_api.dart';
 
 class CoinTrackingController {
   final CoingeckoApiService apiService = CoingeckoApiService();
-  late Future<dynamic> coinFuture;
+  late Future<dynamic> coinData;
   late DateTime lastRefreshTime;
   SortingMetric priceChangeInterval = SortingMetric.day;
   String? lastClickedSortingButton;
@@ -19,19 +20,32 @@ class CoinTrackingController {
   bool isPriceAscending = false;
   bool isSortingBarVisible = false;
   Color refreshButtonColor = Colors.grey.shade800;
+  bool isLoaded = false;
 
   CoinTrackingController() {
-    coinFuture = apiService.getCoins();
+    coinData = apiService.getCoins();
     lastRefreshTime = DateTime.now();
   }
 
-  Future<void> reloadData() async {
+  Future<void> reloadData(BuildContext context) async {
     final timeOfRefresh = DateTime.now();
-    if (timeOfRefresh.difference(lastRefreshTime).inSeconds >= 60) {
-      coinFuture = apiService.getCoins();
+    final int timeDifference =
+        timeOfRefresh.difference(lastRefreshTime).inSeconds;
+
+    if (timeDifference >= 60) {
+      coinData = apiService.getCoins();
       lastRefreshTime = timeOfRefresh;
     } else {
-      // TODO: Show popup if user tries to refresh too often
+      int waitTime = 60 - timeDifference;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PopupMessage(
+            message: "Data can only be refreshed every 60 seconds. "
+                "Please wait another $waitTime seconds.",
+          );
+        },
+      );
     }
   }
 
@@ -101,7 +115,7 @@ class CoinTrackingController {
   }
 
   void sortAndChangeOrder(SortingMetric metric) {
-    coinFuture.then((dynamic data) {
+    coinData.then((dynamic data) {
       List<Market> coinData = data as List<Market>;
       if (metric == SortingMetric.marketCap) {
         sortCoins(coinData, metric, isMarketCapAscending);
@@ -117,7 +131,7 @@ class CoinTrackingController {
   }
 
   void sortWithCurrentOrder(SortingMetric metric) {
-    coinFuture.then((dynamic data) {
+    coinData.then((dynamic data) {
       List<Market> coinData = data as List<Market>;
       sortCoins(coinData, metric, lastPriceChangeSortOrder);
     });

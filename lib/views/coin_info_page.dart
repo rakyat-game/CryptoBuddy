@@ -47,7 +47,8 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('TODO add to favorites'),
+            const Text(
+                'In development: add to favorites, proper buy/sell, chart, (ai generated info text?)'),
             Text('Current price: ${widget.coin.currentPrice}'),
             Text('24h Price Change: '
                 '${widget.coin.priceChangePercentage24hInCurrency?.toStringAsFixed(2)}'),

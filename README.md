@@ -1,4 +1,4 @@
-# CryptoBuddy
+## CryptoBuddy
 
 CryptoBuddy provides real-time data of popular digital currencies
 and allows users to build their own portfolios.
@@ -21,7 +21,7 @@ using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. Devel
 - Clone the repo: ```git clone https://gitty.informatik.hs-mannheim.de/2025448/CryptoBuddy.git```
 - Fetch necessary dependencies inside the downloaded folder: ```flutter pub get```
 - Run the app: ```flutter run -d os```, where ```os``` &isin; {linux, windows, android}\
-The app's UI is primarily designed for android. For android, use Android Studio and either connect a physical device or\
+The apps UI is primarily designed for android. For android, use Android Studio and either connect a physical device or\
 set up an emulator.
 
 ---
@@ -77,7 +77,7 @@ These functionalities are 'nice-to-have' and might not be implemented depending 
 ### CoinGecko API limitations
 
 This app makes use of the free Demo(Beta) plan. Plans can be viewed [here](https://www.coingecko.com/en/api/pricing). <br>
-
+Max Coins per API call: 250\
 Max API calls per month: 10.000\
 Max API calls per minute: 30\
 Data freshness: 60 seconds

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart'; // Import required for ChangeNotifier
+import 'package:flutter/foundation.dart';
 
 import 'crypto_asset.dart';
 

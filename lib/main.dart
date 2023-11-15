@@ -15,18 +15,18 @@ import 'models/portfolio_model.dart';
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(
-    // provider is used to access the portfolio across different pages
+    // provider is used to change & access the portfolio across different pages
     ChangeNotifierProvider(
       // fill portfolio with test data, will be replaced in later stages
       create: (context) => PortfolioModel(
-        investment: 3000.0,
+        investment: 2000.0,
         assets: [
           CryptoAsset(
             coin: Market.fromJson({
               'id': 'dogecoin',
               'symbol': 'DOGE',
               'name': 'Dogecoin',
-              'current_price': 1100.0,
+              'current_price': 1500.0,
             }),
             quantity: 1,
           ),
@@ -76,11 +76,27 @@ class _PageSwitcherState extends State<PageSwitcher> {
     CoinTrackingPage(),
     Portfolio(),
   ];
+  final List<bool> _pageVisibility = [true, false];
+  void _changeVisibility(int index) {
+    setState(() {
+      for (int i = 0; i < _pageVisibility.length; i++) {
+        _pageVisibility[i] = i == index;
+      }
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: Stack(
+        children: List.generate(_pages.length, (index) {
+          return Visibility(
+              maintainState: true,
+              visible: _pageVisibility[index],
+              child: _pages[index]);
+        }),
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -89,11 +105,7 @@ class _PageSwitcherState extends State<PageSwitcher> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: GNav(
               selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+              onTabChange: _changeVisibility,
               gap: 8,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               color: Colors.black,

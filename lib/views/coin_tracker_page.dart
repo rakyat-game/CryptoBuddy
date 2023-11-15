@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:crypto_buddy/widgets/sorting_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../controllers/coin_tracker_controller.dart';
-import '../utils/sorting_metrics.dart';
 import '../widgets/coin_list.dart';
-import '../widgets/sorting_button.dart';
+import '../widgets/popup_message.dart';
 
 class CoinTrackingPage extends StatefulWidget {
   const CoinTrackingPage({super.key});
@@ -22,11 +22,12 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Row(
           children: [
             Flexible(
               child: SizedBox(
-                height: 33.0,
+                height: 33,
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
@@ -65,31 +66,42 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
           ],
         ),
         actions: [
-          IconButton(
-            color: controller.isSortingBarVisible
-                ? Colors.white.withRed(10)
-                : Colors.grey.shade800,
-            icon: const Icon(
-              LineIcons.sort,
+          Padding(
+            padding: const EdgeInsets.only(top: 3.5),
+            child: IconButton(
+              color: controller.isSortingBarVisible
+                  ? Colors.white.withRed(10)
+                  : Colors.grey.shade800,
+              icon: const Icon(
+                LineIcons.sort,
+              ),
+              onPressed: () {
+                setState(() {
+                  controller.isSortingBarVisible =
+                      !controller.isSortingBarVisible;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                controller.isSortingBarVisible =
-                    !controller.isSortingBarVisible;
-              });
-            },
-          ),
-          IconButton(
-            icon: const Icon(
-              LineIcons.star,
-              //color: Colors.white,
-            ),
-            onPressed: () {
-              //TODO
-            },
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 15),
+            padding: const EdgeInsets.only(top: 3.5),
+            child: IconButton(
+              icon: const Icon(
+                LineIcons.star,
+                //color: Colors.white,
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const PopupMessage(message: "Coming soon...");
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 3.5, right: 15),
             child: IconButton(
               icon: const Icon(
                 LineIcons.syncIcon,
@@ -100,7 +112,7 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                 setState(() {
                   controller.refreshButtonColor = Colors.white.withRed(10);
                 });
-                await controller.reloadData();
+                await controller.reloadData(context);
                 Timer(const Duration(seconds: 2), () {
                   if (mounted) {
                     setState(() {
@@ -110,128 +122,17 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                 });
               },
             ),
-          )
+          ),
         ],
       ),
       body: Column(
         children: [
           if (controller.isSortingBarVisible)
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    margin: const EdgeInsets.only(left: 10, right: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white
-                              .withRed(10), //Colors.black.withOpacity(.2),
-                          spreadRadius: .3,
-                          blurRadius: .3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: PopupMenuButton<SortingMetric>(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      onSelected: (SortingMetric metric) {
-                        setState(() {
-                          controller.priceChangeInterval = metric;
-                          if (controller.lastClickedSortingButton ==
-                              'priceChangeButton') {
-                            controller.sortWithCurrentOrder(metric);
-                          }
-                        });
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return SortingMetric.values
-                            .where((SortingMetric metric) =>
-                                metric != SortingMetric.marketCap &&
-                                metric != SortingMetric.price)
-                            .map((SortingMetric metric) {
-                          return PopupMenuItem<SortingMetric>(
-                            value: metric,
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              metric.longName,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          );
-                        }).toList();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            controller.priceChangeInterval.name,
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SortingButton(
-                    onTap: () {
-                      setState(() {
-                        controller.sortAndChangeOrder(SortingMetric.marketCap);
-                        controller.lastClickedSortingButton = 'marketCapButton';
-                      });
-                    },
-                    label: 'Market Cap',
-                    isActive: controller.lastClickedSortingButton ==
-                        'marketCapButton',
-                    icon: controller.isMarketCapAscending
-                        ? Icons.keyboard_arrow_down
-                        : Icons.keyboard_arrow_up,
-                  ),
-                  SortingButton(
-                    onTap: () {
-                      setState(() {
-                        controller
-                            .sortAndChangeOrder(controller.priceChangeInterval);
-                        controller.lastClickedSortingButton =
-                            'priceChangeButton';
-                        controller.lastPriceChangeSortOrder =
-                            controller.isPriceChangeAscending;
-                      });
-                    },
-                    label: 'Price Change',
-                    isActive: controller.lastClickedSortingButton ==
-                        'priceChangeButton',
-                    icon: controller.isPriceChangeAscending
-                        ? Icons.keyboard_arrow_down
-                        : Icons.keyboard_arrow_up,
-                  ),
-                  SortingButton(
-                    onTap: () {
-                      setState(() {
-                        controller.sortAndChangeOrder(SortingMetric.price);
-                        controller.lastClickedSortingButton = 'priceButton';
-                      });
-                    },
-                    label: 'Price',
-                    isActive:
-                        controller.lastClickedSortingButton == 'priceButton',
-                    icon: controller.isPriceAscending
-                        ? Icons.keyboard_arrow_down
-                        : Icons.keyboard_arrow_up,
-                  ),
-                ],
-              ),
+            SortingBar(
+              controller: controller,
+              onChange: () {
+                setState(() {});
+              },
             ),
           const Padding(
             padding: EdgeInsets.only(top: 3.0),
@@ -243,12 +144,16 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: controller.coinFuture,
+              future: controller.coinData,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Image(image: AssetImage("img/new_logo.png")));
                 } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                  return Text(
+                      'Yikes, something went wrong:\n ${snapshot.error}');
                 } else {
                   var coinData = snapshot.data;
                   return CoinList(
