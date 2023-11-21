@@ -4,7 +4,7 @@ class CryptoAsset {
   Market coin;
   double quantity;
 
-  double get totalValue => quantity * (coin.currentPrice ?? 0.0);
+  double get totalValue => quantity * coin.currentPrice!;
 
   CryptoAsset({required this.coin, required this.quantity});
 }

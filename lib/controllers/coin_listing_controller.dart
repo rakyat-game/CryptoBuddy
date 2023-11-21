@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
-import 'package:crypto_buddy/widgets/popup_message.dart';
 import 'package:flutter/material.dart';
 
 import '/services/coingecko_api.dart';
 
-class CoinTrackingController {
-  final CoingeckoApiService apiService = CoingeckoApiService();
-  late Future<dynamic> coinData;
+class CoinListingController {
+  final CoingeckoApiService apiService;
+  late Future<List<Market>> coinData;
   late DateTime lastRefreshTime;
+  late int refreshWaitTime; // in seconds
   SortingMetric priceChangeInterval = SortingMetric.day;
   String? lastClickedSortingButton;
   String searchQuery = '';
@@ -22,30 +22,24 @@ class CoinTrackingController {
   Color refreshButtonColor = Colors.grey.shade800;
   bool isLoaded = false;
 
-  CoinTrackingController() {
+  CoinListingController({required this.apiService}) {
     coinData = apiService.getCoins();
     lastRefreshTime = DateTime.now();
+    refreshWaitTime = 60;
   }
 
-  Future<void> reloadData(BuildContext context) async {
+  Future<bool> reloadData() async {
     final timeOfRefresh = DateTime.now();
     final int timeDifference =
         timeOfRefresh.difference(lastRefreshTime).inSeconds;
 
-    if (timeDifference >= 60) {
+    if (timeDifference > 60) {
       coinData = apiService.getCoins();
       lastRefreshTime = timeOfRefresh;
+      return true;
     } else {
-      int waitTime = 60 - timeDifference;
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return PopupMessage(
-            message: "Data can only be refreshed every 60 seconds. "
-                "Please wait another $waitTime seconds.",
-          );
-        },
-      );
+      refreshWaitTime = 60 - timeDifference;
+      return false;
     }
   }
 
@@ -57,10 +51,6 @@ class CoinTrackingController {
                 .toLowerCase()
                 .startsWith(searchQuery.toLowerCase().trim()))
             .toList();
-  }
-
-  void setSearchQuery(String query) {
-    searchQuery = query;
   }
 
   void sortCoins(List<Market> coinData, SortingMetric metric, bool ascending) {
@@ -101,7 +91,7 @@ class CoinTrackingController {
           compareB = b.priceChangePercentage1yInCurrency;
           break;
         default:
-          throw ArgumentError('Invalid metric: $metric');
+          throw Exception('Invalid metric: $metric');
       }
 
       if (compareA == null || compareB == null) {
@@ -114,8 +104,8 @@ class CoinTrackingController {
     });
   }
 
-  void sortAndChangeOrder(SortingMetric metric) {
-    coinData.then((dynamic data) {
+  Future<void> sortAndChangeOrder(SortingMetric metric) async {
+    await coinData.then((dynamic data) {
       List<Market> coinData = data as List<Market>;
       if (metric == SortingMetric.marketCap) {
         sortCoins(coinData, metric, isMarketCapAscending);
@@ -130,7 +120,7 @@ class CoinTrackingController {
     });
   }
 
-  void sortWithCurrentOrder(SortingMetric metric) {
+  Future<void> sortWithCurrentOrder(SortingMetric metric) async {
     coinData.then((dynamic data) {
       List<Market> coinData = data as List<Market>;
       sortCoins(coinData, metric, lastPriceChangeSortOrder);

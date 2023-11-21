@@ -4,19 +4,20 @@ import 'package:crypto_buddy/widgets/sorting_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
-import '../controllers/coin_tracker_controller.dart';
+import '../controllers/coin_listing_controller.dart';
+import '../services/coingecko_api.dart';
 import '../widgets/coin_list.dart';
 import '../widgets/popup_message.dart';
 
-class CoinTrackingPage extends StatefulWidget {
-  const CoinTrackingPage({super.key});
+class CoinListingPage extends StatefulWidget {
+  const CoinListingPage({super.key});
 
   @override
-  State<CoinTrackingPage> createState() => _CoinTrackingPageState();
+  State<CoinListingPage> createState() => _CoinListingPageState();
 }
 
-class _CoinTrackingPageState extends State<CoinTrackingPage> {
-  final controller = CoinTrackingController();
+class _CoinListingPageState extends State<CoinListingPage> {
+  final controller = CoinListingController(apiService: CoingeckoApiService());
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
                   child: TextField(
                     onChanged: (text) {
                       setState(() {
-                        controller.setSearchQuery(text);
+                        controller.searchQuery = text;
                       });
                     },
                     cursorColor: Colors.white.withRed(10),
@@ -88,7 +89,6 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
             child: IconButton(
               icon: const Icon(
                 LineIcons.star,
-                //color: Colors.white,
               ),
               onPressed: () {
                 showDialog(
@@ -105,14 +105,24 @@ class _CoinTrackingPageState extends State<CoinTrackingPage> {
             child: IconButton(
               icon: const Icon(
                 LineIcons.syncIcon,
-                //color: Colors.white,
               ),
               color: controller.refreshButtonColor,
               onPressed: () async {
                 setState(() {
                   controller.refreshButtonColor = Colors.white.withRed(10);
                 });
-                await controller.reloadData(context);
+
+                if (!await controller.reloadData() && mounted) {
+                  showDialog(
+                    builder: (BuildContext context) {
+                      return PopupMessage(
+                        message: 'Data can only be refreshed every 60 seconds. '
+                            'Please wait another ${controller.refreshWaitTime} seconds.',
+                      );
+                    },
+                    context: context,
+                  );
+                }
                 Timer(const Duration(seconds: 2), () {
                   if (mounted) {
                     setState(() {

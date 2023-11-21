@@ -8,8 +8,8 @@ enum SortingMetric {
   sixMonths(name: '6m', longName: '6 months'),
   year(name: '1y', longName: '1 year');
 
-  const SortingMetric({required this.name, required this.longName});
-
   final String name;
   final String longName;
+
+  const SortingMetric({required this.name, required this.longName});
 }

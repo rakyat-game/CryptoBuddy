@@ -21,10 +21,6 @@ class _PortfolioState extends State<Portfolio> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Image(image: AssetImage("img/new_logo.png"))),
               const Divider(
                 color: Colors.black,
                 thickness: .8,

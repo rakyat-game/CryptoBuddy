@@ -1,18 +1,15 @@
 import 'package:coingecko_api/data/market.dart';
-import 'package:crypto_buddy/controllers/coin_tracker_controller.dart';
+import 'package:crypto_buddy/controllers/coin_listing_controller.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
 import 'package:crypto_buddy/views/coin_info_page.dart';
 import 'package:flutter/material.dart';
 
-import '../services/openai_api.dart';
-
 class CoinList extends StatelessWidget {
   final List<Market> coinData;
   final SortingMetric priceChangeInterval;
-  final CoinTrackingController controller;
-  final openAi = OpenAiApiService();
+  final CoinListingController controller;
 
-  CoinList(
+  const CoinList(
       {super.key,
       required this.coinData,
       required this.priceChangeInterval,
@@ -46,7 +43,8 @@ class CoinList extends StatelessWidget {
             priceChange = coin.priceChangePercentage1yInCurrency;
             break;
           default:
-            print("Metric $priceChangeInterval is not a valid interval!");
+            throw Exception("Yikes, $priceChangeInterval is not a valid price"
+                "change interval!");
         }
 
         return Stack(
@@ -96,7 +94,7 @@ class CoinList extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                         child: Image.network(
                           coin.image ??
-                              'default_image_url', // TODO find default pic url
+                              'https://purepng.com/public/uploads/large/purepng.com-gold-coingoldatomic-number-79chemical-elementgroup-11-elementaurumgold-dustprecious-metalgold-coins-1701528977728s2dcq.png',
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent? loadingProgress) {
                             if (loadingProgress == null) {

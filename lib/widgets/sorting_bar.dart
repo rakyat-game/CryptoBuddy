@@ -1,11 +1,11 @@
-import 'package:crypto_buddy/controllers/coin_tracker_controller.dart';
+import 'package:crypto_buddy/controllers/coin_listing_controller.dart';
 import 'package:crypto_buddy/widgets/sorting_button.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/sorting_metrics.dart';
 
 class SortingBar extends StatefulWidget {
-  final CoinTrackingController controller;
+  final CoinListingController controller;
   final VoidCallback onChange;
   const SortingBar(
       {super.key, required this.controller, required this.onChange});
@@ -15,7 +15,7 @@ class SortingBar extends StatefulWidget {
 }
 
 class _SortingBarState extends State<SortingBar> {
-  CoinTrackingController get controller => widget.controller;
+  CoinListingController get controller => widget.controller;
 
   @override
   Widget build(BuildContext context) {

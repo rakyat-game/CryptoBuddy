@@ -5,21 +5,26 @@ import 'crypto_asset.dart';
 class PortfolioModel extends ChangeNotifier {
   final List<CryptoAsset> _assets;
   double _investment;
+  double _selling;
 
   PortfolioModel(
-      {required List<CryptoAsset> assets, required double investment})
+      {required List<CryptoAsset> assets,
+      required double investment,
+      double selling = 0})
       : _assets = assets,
-        _investment = investment;
+        _investment = investment,
+        _selling = selling;
 
   List<CryptoAsset> get assets => _assets;
   double get investment => _investment;
+  double get selling => _selling;
 
   double get currentValue {
-    return _assets.fold(0.0, (sum, asset) => sum + asset.totalValue);
+    return assets.fold(0.0, (sum, asset) => sum + asset.totalValue);
   }
 
   double get profitLoss {
-    return currentValue - _investment;
+    return currentValue + selling - investment;
   }
 
   void buyAsset(CryptoAsset asset) {
@@ -36,7 +41,9 @@ class PortfolioModel extends ChangeNotifier {
   }
 
   void sellAsset(CryptoAsset asset) {
-    _assets.remove(asset);
-    notifyListeners();
+    if (_assets.remove(asset)) {
+      _selling += asset.totalValue;
+      notifyListeners();
+    }
   }
 }

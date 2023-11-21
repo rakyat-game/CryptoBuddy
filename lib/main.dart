@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:coingecko_api/data/market.dart';
-import 'package:crypto_buddy/views/coin_tracker_page.dart';
+import 'package:crypto_buddy/models/crypto_asset.dart';
+import 'package:crypto_buddy/views/coin_listing_page.dart';
 import 'package:crypto_buddy/views/portfolio_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +10,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
-import 'models/crypto_asset.dart';
 import 'models/portfolio_model.dart';
 
 void main() {
@@ -17,15 +17,15 @@ void main() {
   runApp(
     // provider is used to change & access the portfolio across different pages
     ChangeNotifierProvider(
-      // fill portfolio with test data, will be replaced in later stages
+      // fill portfolio with test data, will later be replaced with user data
       create: (context) => PortfolioModel(
         investment: 2000.0,
         assets: [
           CryptoAsset(
             coin: Market.fromJson({
-              'id': 'dogecoin',
-              'symbol': 'DOGE',
-              'name': 'Dogecoin',
+              'id': 'stellar',
+              'symbol': 'xlm',
+              'name': 'Stellar',
               'current_price': 1500.0,
             }),
             quantity: 1,
@@ -33,7 +33,7 @@ void main() {
           CryptoAsset(
             coin: Market.fromJson({
               'id': 'cardano',
-              'symbol': 'ADA',
+              'symbol': 'ada',
               'name': 'Cardano',
               'current_price': 1000.0,
             }),
@@ -73,10 +73,11 @@ class PageSwitcher extends StatefulWidget {
 class _PageSwitcherState extends State<PageSwitcher> {
   int _selectedIndex = 0;
   static const List<Widget> _pages = [
-    CoinTrackingPage(),
+    CoinListingPage(),
     Portfolio(),
   ];
   final List<bool> _pageVisibility = [true, false];
+
   void _changeVisibility(int index) {
     setState(() {
       for (int i = 0; i < _pageVisibility.length; i++) {

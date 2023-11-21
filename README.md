@@ -5,6 +5,8 @@ and allows users to build their own portfolios.
 Data is fetched via the [CoinGecko API](https://www.coingecko.com/en/api) 
 using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. Developed by Steven Schmitt(2025448@stud.hs-mannheim.de).
 
+<img src="./img/Screenshot_20231120_135214.png" alt="demo picture" width="333" />
+
 ---
 
 ### Supported platforms
@@ -21,19 +23,22 @@ using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. Devel
 - Clone the repo: ```git clone https://gitty.informatik.hs-mannheim.de/2025448/CryptoBuddy.git```
 - Fetch necessary dependencies inside the downloaded folder: ```flutter pub get```
 - Run the app: ```flutter run -d os```, where ```os``` &isin; {linux, windows, android}\
-The apps UI is primarily designed for android. For android, use Android Studio and either connect a physical device or\
+The apps UI is primarily designed for android. For android, use Android Studio and either connect a physical device or
 set up an emulator.
 
 ---
 
 ### Currently implemented features
 
-- **Cryptocurrency Listing**: List of 250 cryptocurrencies, displaying information such as
+- **Cryptocurrency Listing**: List of 250 cryptocurrencies displaying information such as
     the current price, price change percentage, name and ticker.
 
 
 - **Search Functionality**: Effortlessly search through the list of cryptocurrencies 
     to quickly find and view details about a specific coin.
+
+
+- **Refresh Functionality**: Users can refresh the data of all coins every 60 seconds. 
 
 
 - **Sorting Options**: Sort the cryptocurrency list based on various criteria, such as market cap,
@@ -49,9 +54,10 @@ set up an emulator.
 
 These functionalities are planned to be implemented and tested before the end of the project deadline.
 
-- **Portfolio building**: Add or remove cryptocurrencies from your portfolio at will. There will be a dedicated
+- **Portfolio building**: Buy and sell cryptocurrencies from your portfolio at will. There will be a dedicated
     page for the portfolio showing current balance and data for all owned assets.
     Adding and removing can be done via the detailed coin page or on the portfolio page itself.
+    Additionally, the data in the portfolio will be persistent.
 
 
 - **Favorites Selection**: Add specific coins to your list of favorites and
@@ -60,7 +66,7 @@ These functionalities are planned to be implemented and tested before the end of
 
 -  **Price Visualisation**: Line charts for the value change of a specific coin and the portfolio
 
-These functionalities are 'nice-to-have' and might not be implemented depending on the remaining time:
+These are 'nice-to-have' functionalities and might not be implemented depending on the remaining time:
 
 
 - **AI generated descriptions**: Generate an info text for each coin with OpenAI's API.
@@ -68,9 +74,6 @@ These functionalities are 'nice-to-have' and might not be implemented depending 
 
 - **Settings Page**: Provides options to change color scheme and currency.
 
-
-- **Dedicated Home Page**: Gives access to the settings page, shows current portfolio value, a currency converter
-    and  favored cryptocurrencies.
 
 ---
 

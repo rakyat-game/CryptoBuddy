@@ -27,11 +27,10 @@ class CoingeckoApiService {
           PriceChangeInterval.d200,
           PriceChangeInterval.y1
         ]);
-    print("Api call was made");
     return coinList.data;
   }
 
-  // listCoinMarkets() only provides a spark line for 7 day interval
+  // listCoinMarkets() only provides spark line  data for 7 day interval
   Future<Map<String, List<MarketChartData>>> getSparkLineData(
       {required String coinId, String currency = 'eur'}) async {
     final CoinGeckoResult sparkLine = await _api.coins
@@ -39,19 +38,23 @@ class CoingeckoApiService {
     List<MarketChartData> allData = sparkLine.data;
     DateTime now = DateTime.now();
     List<MarketChartData> lastMonthData = allData
-        .where(
-            (data) => data.date.isAfter(now.subtract(const Duration(days: 30))))
+        .where((data) =>
+            data.date.isAfter(now
+                .subtract(const Duration(days: 30))
+                .subtract(const Duration(seconds: 1))) ||
+            data.date.isAtSameMomentAs(now.subtract(const Duration(days: 30))))
         .toList();
     List<MarketChartData> lastSixMonthsData = allData
         .where((data) =>
-            data.date.isAfter(now.subtract(const Duration(days: 180))))
+            data.date.isAfter(now
+                .subtract(const Duration(days: 180))
+                .subtract(const Duration(seconds: 1))) ||
+            data.date.isAtSameMomentAs(now.subtract(const Duration(days: 180))))
         .toList();
-    Map<String, List<MarketChartData>> result = {
+    return {
       'lastMonth': lastMonthData,
       'lastSixMonths': lastSixMonthsData,
       'lastYear': allData,
     };
-    print("Api spark line");
-    return result;
   }
 }

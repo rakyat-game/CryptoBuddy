@@ -5,11 +5,11 @@ import 'package:crypto_buddy/models/portfolio_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/coin_tracker_controller.dart';
+import '../controllers/coin_listing_controller.dart';
 
 class CoinInfoPage extends StatefulWidget {
   final Market coin;
-  final CoinTrackingController controller;
+  final CoinListingController controller;
 
   const CoinInfoPage({super.key, required this.coin, required this.controller});
 
@@ -49,21 +49,23 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
           children: [
             const Text(
                 'In development: add to favorites, proper buy/sell, chart, (ai generated info text?)'),
-            Text('Current price: ${widget.coin.currentPrice}'),
+            Text('Current price: ${widget.coin.currentPrice} €'),
             Text('24h Price Change: '
-                '${widget.coin.priceChangePercentage24hInCurrency?.toStringAsFixed(2)}'),
+                '${widget.coin.priceChangePercentage24hInCurrency?.toStringAsFixed(2)} €'),
             ElevatedButton(
               onPressed: _buyAsset,
               child: const Text('Buy coin, quantity: 1'),
             ),
-            const Text('Spark Line data for chart building:'),
+            const Text('Spark Line data for last month:'),
             FutureBuilder<Map<String, List<MarketChartData>>>(
               future: _sparkLineData,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                      child: Text(
+                          'Yikes, something went wrong: ${snapshot.error}'));
                 } else if (!snapshot.hasData) {
                   return const Center(child: Text('No data available.'));
                 } else {
