@@ -5,7 +5,7 @@ and allows users to build their own portfolios.
 Data is fetched via the [CoinGecko API](https://www.coingecko.com/en/api) 
 using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper. Developed by Steven Schmitt(2025448@stud.hs-mannheim.de).
 
-<img src="./img/Screenshot_20231120_135214.png" alt="demo picture" width="333" />
+<img src="./img/Screenshot_20231120_135214.png" alt="demo picture" width="242" />
 
 ---
 
@@ -85,3 +85,8 @@ Max API calls per month: 10.000\
 Max API calls per minute: 30\
 Data freshness: 60 seconds
 
+---
+
+### Tests
+
+To run all tests, run `flutter test [-r expanded]` from the root directory of your project.
