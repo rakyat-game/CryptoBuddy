@@ -18,6 +18,11 @@ dependencies:
   coingecko_api: ^1.1.1+1
   provider: ^6.0.5
   mockito: ^5.4.3
+  fl_chart: ^0.65.0
+  intl: ^0.18.1
+  dart_openai: ^5.0.0
+  shared_preferences: ^2.2.2
+
 
 dev_dependencies:
   flutter_test:
@@ -35,7 +40,7 @@ flutter_launcher_icons:
   adaptive_icon_background: "img/new_logo.png"
   adaptive_icon_foreground: "img/new_logo.png"
   image_path: "img/new_logo.png"
-  min_sdk_android: 16 # android min sdk min:16, default 21
+  min_sdk_android: 16 # android min sdk:16, default: 21
   windows:
     generate: true
     icon_size: 150 # min:48, max:256, default: 48
