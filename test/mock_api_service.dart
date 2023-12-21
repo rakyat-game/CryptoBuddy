@@ -1,6 +1,6 @@
 import 'package:coingecko_api/data/market.dart';
 import 'package:coingecko_api/data/market_chart_data.dart';
-import 'package:crypto_buddy/services/coingecko_api.dart';
+import 'package:crypto_buddy/utils/coingecko_api.dart';
 import 'package:mockito/mockito.dart';
 
 class MockApi extends Mock implements CoingeckoApiService {

@@ -46,4 +46,14 @@ class PortfolioModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  CryptoAsset? getAsset(coin) {
+    try {
+      return assets.firstWhere(
+        (element) => element.coin.id == coin.id,
+      );
+    } catch (exception) {
+      return null;
+    }
+  }
 }
