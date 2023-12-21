@@ -28,57 +28,34 @@ set up an emulator.
 
 ---
 
-### Currently implemented features
+### Features
 
 - **Cryptocurrency Listing**: List of 250 cryptocurrencies displaying information such as
     the current price, price change percentage, name and ticker.
-
-
-- **Search Functionality**: Effortlessly search through the list of cryptocurrencies 
+- **Search Bar**: Effortlessly search through the list of cryptocurrencies 
     to quickly find and view details about a specific coin.
-
-
-- **Refresh Functionality**: Users can refresh the data of all coins every 60 seconds. 
-
-
+- **Refresh Button**: Users can refresh the data of all coins every 60 seconds.
 - **Sorting Options**: Sort the cryptocurrency list based on various criteria, such as market cap,
     current price, or price change percentage making it easier to analyze and compare different cryptocurrencies.
-
-
-- **Detailed Coin Information**: Upon selecting a specific cryptocurrency from the list, users
+- **Individual Currency Pages**: Upon selecting a specific cryptocurrency from the list, users
     are directed to a dedicated page displaying extensive information about the coin.
-
----
-
-### On the horizon
-
-These functionalities are planned to be implemented and tested before the end of the project deadline.
-
-- **Portfolio building**: Buy and sell cryptocurrencies from your portfolio at will. There will be a dedicated
-    page for the portfolio showing current balance and data for all owned assets.
-    Adding and removing can be done via the detailed coin page or on the portfolio page itself.
-    Additionally, the data in the portfolio will be persistent.
-
-
+- **Price Development Charts**: Line charts settable from one hour to one year displaying the price change.
+- **AI generated descriptions**: Artificially generated info texts for each coin.
 - **Favorites Selection**: Add specific coins to your list of favorites and
-    filter the list with all currencies for quick access.
-
-
--  **Price Visualisation**: Line charts for the value change of a specific coin and the portfolio
-
-These are 'nice-to-have' functionalities and might not be implemented depending on the remaining time:
-
-
-- **AI generated descriptions**: Generate an info text for each coin with OpenAI's API.
-
-
-- **Settings Page**: Provides options to change color scheme and currency.
-
-
+  filter the list with all currencies for quick access.
+- **Portfolio building**: Buy and sell cryptocurrencies from your portfolio at will. The portfolio page provides 
+Adding and removing can be done via the detailed coin page or on the portfolio page itself.
+Additionally, the data in the portfolio will be persistent.
+- **Dark Mode**: Access to light and dark mode and customizable accent colors.
 ---
 
-### CoinGecko API limitations
+### APIs
 
+**OpenAI**\
+The API key expires in January 2024\
+Used credit(as of 18.12.2023): $0.01/$5
+
+**CoinGecko**\
 This app makes use of the free Demo(Beta) plan. Plans can be viewed [here](https://www.coingecko.com/en/api/pricing). <br>
 Max Coins per API call: 250\
 Max API calls per month: 10.000\
