@@ -4,7 +4,8 @@ import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
 import 'package:flutter/material.dart';
 
-import '/services/coingecko_api.dart';
+import '../utils/coingecko_api.dart';
+import '../utils/favorites.dart';
 
 class CoinListingController {
   final CoingeckoApiService apiService;
@@ -21,9 +22,10 @@ class CoinListingController {
   bool isSortingBarVisible = false;
   Color refreshButtonColor = Colors.grey.shade800;
   bool isLoaded = false;
+  bool showFavoredCoins = false;
 
   CoinListingController({required this.apiService}) {
-    coinData = apiService.getCoins();
+    coinData = apiService.getCoins(currency: 'usd');
     lastRefreshTime = DateTime.now();
     refreshWaitTime = 60;
   }
@@ -34,7 +36,7 @@ class CoinListingController {
         timeOfRefresh.difference(lastRefreshTime).inSeconds;
 
     if (timeDifference > 60) {
-      coinData = apiService.getCoins();
+      coinData = apiService.getCoins(currency: 'usd');
       lastRefreshTime = timeOfRefresh;
       return true;
     } else {
@@ -51,6 +53,12 @@ class CoinListingController {
                 .toLowerCase()
                 .startsWith(searchQuery.toLowerCase().trim()))
             .toList();
+  }
+
+  Future<List<Market>> getFavoredCoins() async {
+    List<String> favoredIds = await FavoritesService.getFavorites();
+    return coinData.then((value) =>
+        value.where((coin) => favoredIds.contains(coin.id)).toList());
   }
 
   void sortCoins(List<Market> coinData, SortingMetric metric, bool ascending) {

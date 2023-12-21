@@ -19,9 +19,10 @@ class _SortingBarState extends State<SortingBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -29,12 +30,11 @@ class _SortingBarState extends State<SortingBar> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             margin: const EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color:
-                      Colors.white.withRed(10), //Colors.black.withOpacity(.2),
+                  color: theme.highlightColor, //Colors.black.withOpacity(.2),
                   spreadRadius: .3,
                   blurRadius: .3,
                   offset: const Offset(0, 1),
@@ -42,12 +42,12 @@ class _SortingBarState extends State<SortingBar> {
               ],
             ),
             child: PopupMenuButton<SortingMetric>(
-              color: Colors.white,
+              color: theme.cardColor,
               surfaceTintColor: Colors.transparent,
-              shadowColor: Colors.white.withRed(10),
+              shadowColor: theme.highlightColor,
               shape: RoundedRectangleBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                  side: BorderSide(color: Colors.white.withRed(10))),
+                  side: BorderSide(color: theme.highlightColor)),
               onSelected: (SortingMetric metric) {
                 setState(() {
                   controller.priceChangeInterval = metric;
@@ -60,13 +60,13 @@ class _SortingBarState extends State<SortingBar> {
               },
               itemBuilder: (BuildContext context) {
                 return [
-                  const PopupMenuItem<SortingMetric>(
+                  PopupMenuItem<SortingMetric>(
                     enabled: false,
                     child: Text(
                       'Select Time Interval',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: theme.primaryColor,
                       ),
                     ),
                   ),
@@ -81,8 +81,8 @@ class _SortingBarState extends State<SortingBar> {
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
                         metric.longName,
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: theme.primaryColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -95,8 +95,8 @@ class _SortingBarState extends State<SortingBar> {
                 children: [
                   Text(
                     controller.priceChangeInterval.name,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: theme.primaryColor, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

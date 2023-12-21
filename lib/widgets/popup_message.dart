@@ -7,8 +7,13 @@ class PopupMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return AlertDialog(
-      content: Text(message),
+      backgroundColor: theme.cardColor,
+      content: Text(
+        message,
+        style: TextStyle(color: theme.primaryColor),
+      ),
       actions: [
         SortingButton(
           onTap: () => Navigator.of(context).pop(),

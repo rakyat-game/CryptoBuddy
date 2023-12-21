@@ -1,23 +1,29 @@
 import 'package:coingecko_api/data/market.dart';
 import 'package:crypto_buddy/controllers/coin_listing_controller.dart';
+import 'package:crypto_buddy/utils/format_number.dart';
 import 'package:crypto_buddy/utils/sorting_metrics.dart';
-import 'package:crypto_buddy/views/coin_info_page.dart';
 import 'package:flutter/material.dart';
 
 class CoinList extends StatelessWidget {
   final List<Market> coinData;
   final SortingMetric priceChangeInterval;
   final CoinListingController controller;
+  final void Function(Market) onCoinTap;
 
   const CoinList(
       {super.key,
       required this.coinData,
       required this.priceChangeInterval,
+      required this.onCoinTap,
       required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    var filteredCoins = controller.filterCoins(coinData);
+    List<Market> filteredCoins = controller.filterCoins(coinData);
+    ThemeData theme = Theme.of(context);
+    Color primary = theme.primaryColor;
+    Color highlight = theme.highlightColor;
+
     return ListView.builder(
       itemCount: filteredCoins.length,
       itemBuilder: (BuildContext context, int index) {
@@ -49,80 +55,83 @@ class CoinList extends StatelessWidget {
 
         return Stack(
           children: [
-            InkWell(
-              hoverColor: Colors.blueGrey.shade100,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CoinInfoPage(
-                            coin: coin,
-                            controller: controller,
-                          )),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.grey.shade400))),
-                padding: const EdgeInsets.only(
-                  left: 24,
-                  right: 24,
-                  top: 9,
-                  bottom: 9,
-                ),
-                child: Row(
-                  children: [
-                    // Left Section
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: InkWell(
+                hoverColor: highlight.withOpacity(.2),
+                focusColor: highlight.withOpacity(.3),
+                highlightColor: highlight.withOpacity(.5),
+                borderRadius: BorderRadius.circular(20),
+                enableFeedback: true,
+                onTap: () {
+                  onCoinTap(coinData[index]);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.cardColor.withOpacity(.6),
+                    border: Border.all(color: highlight.withOpacity(.42)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Left Section with Image, Name and Symbol
+                      Row(
                         children: [
-                          Text(
-                            coin.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: 34,
+                            height: 34,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(18.0),
+                              child: Image.network(
+                                coin.image ??
+                                    'https://purepng.com/public/uploads/large/purepng.com-gold-coingoldatomic-number-79chemical-elementgroup-11-elementaurumgold-dustprecious-metalgold-coins-1701528977728s2dcq.png',
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: highlight,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                          Text(coin.symbol),
+                          const SizedBox(width: 13),
+                          // Coin Name and Symbol
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                coin.name,
+                                style: TextStyle(
+                                    color: primary,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                coin.symbol.toUpperCase(),
+                                style: TextStyle(color: primary),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                    ),
-                    // Center Section
-                    SizedBox(
-                      width: 34,
-                      height: 34,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Image.network(
-                          coin.image ??
-                              'https://purepng.com/public/uploads/large/purepng.com-gold-coingoldatomic-number-79chemical-elementgroup-11-elementaurumgold-dustprecious-metalgold-coins-1701528977728s2dcq.png',
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          (loadingProgress.expectedTotalBytes ??
-                                              1)
-                                      : null,
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    // Right Section
-                    Expanded(
-                      child: Column(
+
+                      // Right Section with Price and Price Change
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${coin.currentPrice} €',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            '${Formatter.formatNumber(coin.currentPrice)} \$',
+                            style: TextStyle(
+                                color: primary, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             '${priceChange != null && priceChange > 0 ? "+" : ""}'
@@ -135,13 +144,10 @@ class CoinList extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
             ),
           ],
         );
