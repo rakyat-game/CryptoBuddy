@@ -1,7 +1,8 @@
+import 'package:crypto_buddy/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/portfolio_model.dart';
+import '../models/portfolio.dart';
 import '../utils/format_number.dart';
 import '../widgets/gradient_app_bar.dart';
 import '../widgets/portfolio_coin_info.dart';
@@ -18,7 +19,9 @@ class _PortfolioPageState extends State<PortfolioPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final portfolio = Provider.of<PortfolioModel>(context);
+    final portfolio = Provider.of<Portfolio>(context);
+    final coins = Provider.of<CoinDataProvider>(context).coinData;
+    portfolio.buildPortfolio(coins);
     double availableHeight = MediaQuery.of(context).size.height * 0.35;
     double buttonHeight = (availableHeight - (8 * 2)) / 4;
     double buttonWidth = MediaQuery.of(context).size.width / 3;
@@ -48,21 +51,25 @@ class _PortfolioPageState extends State<PortfolioPage> {
                   mainAxisSpacing: 16,
                   children: <Widget>[
                     _buildInfoBox(
-                      'Current Value',
-                      '\$${Formatter.formatNumber(portfolio.currentValue)}',
-                    ),
+                        'Balance',
+                        '\$${Formatter.formatNumber(portfolio.currentValue)}',
+                        Alignment.topLeft,
+                        Alignment.bottomRight),
                     _buildInfoBox(
-                      'Investment',
-                      '\$${Formatter.formatNumber(portfolio.investment)}',
-                    ),
+                        'Investment',
+                        '\$${Formatter.formatNumber(portfolio.investment)}',
+                        Alignment.topRight,
+                        Alignment.bottomLeft),
                     _buildInfoBox(
-                      'Profit/Loss',
-                      '\$${Formatter.formatNumber(portfolio.profitLoss)}',
-                    ),
+                        'Profit/Loss',
+                        '\$${Formatter.formatNumber(portfolio.profitLoss)}',
+                        Alignment.bottomLeft,
+                        Alignment.topRight),
                     _buildInfoBox(
-                      'Sales',
-                      '\$${Formatter.formatNumber(portfolio.selling)}',
-                    ),
+                        'Sales',
+                        '\$${Formatter.formatNumber(portfolio.sales)}',
+                        Alignment.bottomRight,
+                        Alignment.topLeft),
                   ],
                 ),
               ),
@@ -104,14 +111,18 @@ class _PortfolioPageState extends State<PortfolioPage> {
     );
   }
 
-  Widget _buildInfoBox(String title, String value) {
+  Widget _buildInfoBox(String title, String value, Alignment startAlignment,
+      Alignment endAlignment) {
     ThemeData theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        border: Border.all(color: theme.highlightColor.withOpacity(.42)),
-        borderRadius: BorderRadius.circular(16),
-      ),
+          color: theme.cardColor,
+          border: Border.all(color: theme.highlightColor.withOpacity(.42)),
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(colors: [
+            theme.highlightColor.withOpacity(.1),
+            Colors.transparent,
+          ], begin: startAlignment, end: endAlignment)),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -62,7 +62,6 @@ class MockApi extends Mock implements CoingeckoApiService {
     return mockData;
   }
 
-  @override
   // uses mock data instead of making the  api call
   Future<Map<String, List<MarketChartData>>> getSparkLineData(
       {required String coinId, String currency = 'eur'}) async {

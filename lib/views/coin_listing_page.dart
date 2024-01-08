@@ -1,13 +1,11 @@
-import 'dart:async';
-
 import 'package:coingecko_api/data/market.dart';
+import 'package:crypto_buddy/main.dart';
 import 'package:crypto_buddy/widgets/sorting_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/coin_listing_controller.dart';
-import '../main.dart';
 import '../utils/coingecko_api.dart';
 import '../widgets/coin_list.dart';
 import '../widgets/popup_message.dart';
@@ -21,7 +19,6 @@ class CoinListingPage extends StatefulWidget {
 }
 
 class _CoinListingPageState extends State<CoinListingPage> {
-  //final controller = controller(apiService: CoingeckoApiService());
   late CoinListingController controller;
 
   @override
@@ -33,9 +30,10 @@ class _CoinListingPageState extends State<CoinListingPage> {
 
   void initializeData() async {
     try {
-      List<Market> data = await controller.apiService.getCoins();
+      List<Market> coinData = await controller.coinData;
       if (mounted) {
-        Provider.of<CoinDataProvider>(context).coinData = data;
+        Provider.of<CoinDataProvider>(context, listen: false).coinData =
+            coinData;
       }
     } catch (_) {}
   }
@@ -53,7 +51,6 @@ class _CoinListingPageState extends State<CoinListingPage> {
 
   @override
   Widget build(BuildContext context) {
-    //Provider.of<CoinDataProvider>(context).coinData = await controller.coinData;
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
@@ -64,7 +61,7 @@ class _CoinListingPageState extends State<CoinListingPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              theme.highlightColor.withOpacity(.2),
+              theme.highlightColor.withOpacity(.25),
               theme.highlightColor.withOpacity(.001),
             ],
           )),
@@ -168,15 +165,21 @@ class _CoinListingPageState extends State<CoinListingPage> {
                     LineIcons.syncIcon,
                     color: theme.primaryColor,
                   ),
-                  color: controller.refreshButtonColor,
                   onPressed: () async {
-                    setState(() {
-                      controller.refreshButtonColor = theme.highlightColor;
-                    });
-                    if (await controller.reloadData() && mounted) {
-                      controller.lastClickedSortingButton = null;
-                      controller.refreshButtonColor = theme.primaryColor;
-                    } else {
+                    bool reloaded = false;
+                    if (mounted) {
+                      reloaded = await controller.reloadData();
+                      if (reloaded) {
+                        setState(() {
+                          controller.lastClickedSortingButton = null;
+                        });
+                        if (context.mounted) {
+                          Provider.of<CoinDataProvider>(context, listen: false)
+                              .coinData = await controller.coinData;
+                        }
+                      }
+                    }
+                    if (!reloaded && context.mounted) {
                       showDialog(
                         builder: (BuildContext context) {
                           return PopupMessage(
@@ -188,13 +191,6 @@ class _CoinListingPageState extends State<CoinListingPage> {
                         context: context,
                       );
                     }
-                    Timer(const Duration(seconds: 2), () {
-                      if (mounted) {
-                        setState(() {
-                          controller.refreshButtonColor = theme.primaryColor;
-                        });
-                      }
-                    });
                   },
                 ),
               ),

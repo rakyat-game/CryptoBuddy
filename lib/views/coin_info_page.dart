@@ -1,7 +1,7 @@
 import 'package:coingecko_api/data/market.dart';
 import 'package:coingecko_api/data/market_chart_data.dart';
 import 'package:crypto_buddy/models/crypto_asset.dart';
-import 'package:crypto_buddy/models/portfolio_model.dart';
+import 'package:crypto_buddy/models/portfolio.dart';
 import 'package:crypto_buddy/utils/coingecko_api.dart';
 import 'package:crypto_buddy/utils/favorites.dart';
 import 'package:crypto_buddy/widgets/coin_statistics.dart';
@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../controllers/coin_listing_controller.dart';
 import '../utils/format_number.dart';
+import 'manage_holdings_page.dart';
 
 class CoinInfoPage extends StatefulWidget {
   final Market coin;
@@ -41,15 +42,6 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
         controller.apiService.getLastWeekToLastDayData(coinId: coin.id);
     activePriceChange = coin.priceChangePercentage7dInCurrency ?? 0;
     _checkIfFavorite();
-  }
-
-  void _buyAsset() {
-    final portfolio = Provider.of<PortfolioModel>(context, listen: false);
-    final assetToBuy = CryptoAsset(
-      coin: coin,
-      quantity: 1,
-    );
-    portfolio.buyAsset(assetToBuy);
   }
 
   void getChartData(String chartRange) async {
@@ -97,7 +89,8 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final portfolio = Provider.of<PortfolioModel>(context, listen: true);
+    final portfolio = Provider.of<Portfolio>(context, listen: true);
+    CryptoAsset? asset = Provider.of<Portfolio>(context).getAsset(coin);
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
@@ -108,7 +101,7 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              theme.highlightColor.withOpacity(.4),
+              theme.highlightColor.withOpacity(.3),
               theme.highlightColor.withOpacity(.001),
             ],
           )),
@@ -148,19 +141,19 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 21, top: 12),
+              padding: const EdgeInsets.only(left: 22, top: 12),
               child: Text(
                   style: TextStyle(
                       color: theme.primaryColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 25),
-                  '${Formatter.formatNumber(coin.currentPrice)} \$'),
+                  '\$${Formatter.formatNumber(coin.currentPrice)}'),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 24),
+              padding: const EdgeInsets.only(left: 22, bottom: 10),
               child: Text(
                   style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 18,
                       color:
                           activePriceChange >= 0 ? Colors.green : Colors.red),
                   '${activePriceChange >= 0 ? '+${activePriceChange.toStringAsFixed(2)}' : activePriceChange.toStringAsFixed(2)} %'),
@@ -178,9 +171,9 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
                       color: theme.highlightColor,
                     ));
                   } else if (snapshot.hasError) {
-                    return Center(
+                    return const Center(
                         child: Text(
-                            'Chart data could not be loaded: ${snapshot.error}'));
+                            'Chart data could not be loaded! Please check your internet connection. '));
                   } else if (!snapshot.hasData ||
                       snapshot.data![activeChartRange]!.isEmpty) {
                     return Center(
@@ -196,7 +189,8 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20, right: 10, bottom: 0),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 10, bottom: 0, top: 10),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -285,18 +279,18 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 21, top: 12),
+              padding: const EdgeInsets.only(left: 22, top: 16),
               child: Text(
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: theme.primaryColor),
                   'Your ${coin.name} Balance'),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 21.0, top: 4),
+              padding: const EdgeInsets.only(left: 22.0, top: 6),
               child: Text(
-                '${portfolio.getAsset(coin)?.totalValue ?? 0.0} \$',
+                '\$${Formatter.formatNumber(portfolio.getAsset(coin)?.totalValue ?? 0.0)}',
                 style: TextStyle(
                     color: theme.primaryColor,
                     fontSize: 20,
@@ -304,9 +298,9 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 21.0, top: 0),
+              padding: const EdgeInsets.only(left: 22.0, top: 0),
               child: Text(
-                '${portfolio.getAsset(coin)?.quantity ?? 0.0} ${coin.symbol.toUpperCase()}',
+                '${Formatter.formatNumber(portfolio.getAsset(coin)?.quantity ?? 0.0)} ${coin.symbol.toUpperCase()}',
                 style: TextStyle(
                     color: theme.primaryColor,
                     fontSize: 16,
@@ -314,33 +308,39 @@ class _CoinInfoPageState extends State<CoinInfoPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 6.0, bottom: 14, top: 8),
+              padding: const EdgeInsets.only(left: 10.0, bottom: 14, top: 8),
               child: Row(
                 children: [
                   SortingButton(
-                    onTap: () => _buyAsset(),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ManageHoldingsPage(
+                              portfolio: Provider.of<Portfolio>(context),
+                              asset: asset ??
+                                  CryptoAsset(coin: coin, quantity: 0.0)),
+                        ),
+                      );
+                    },
                     label: 'Add ${coin.symbol.toUpperCase()}',
                   ),
                   SortingButton(
-                      onTap: () => _buyAsset(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ManageHoldingsPage(
+                                portfolio: Provider.of<Portfolio>(context),
+                                asset: asset ??
+                                    CryptoAsset(coin: coin, quantity: 0.0),
+                                isAdding: false),
+                          ),
+                        );
+                      },
                       label: 'Remove ${coin.symbol.toUpperCase()}'),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 21, top: 12, bottom: 6),
-              child: Text(
-                  style: TextStyle(
-                      color: theme.primaryColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20),
-                  'Info about ${coin.name}'),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 22, bottom: 12, right: 30),
-              child: Text(
-                  style: TextStyle(fontSize: 14, color: theme.primaryColor),
-                  'Cryptocurrency Bitcoin is a decentralized digital currency created in 2009 by pseudonymous software developer Satoshi Nakamoto. Bitcoin uses peer-to-peer technology to operate with no central authority or banks; managing transactions and the issuing of Bitcoins is carried out collectively by the network. Bitcoin is open source; its design is public, nobody owns or controls Bitcoin and everyone can take part in it. Through many of its unique properties, Bitcoin allows exciting uses that could not be covered by any previous payment system.'),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 21, top: 12, bottom: 4),

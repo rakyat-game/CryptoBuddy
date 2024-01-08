@@ -58,17 +58,22 @@ class CoinList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: InkWell(
+                key: ValueKey(coin.id),
                 hoverColor: highlight.withOpacity(.2),
-                focusColor: highlight.withOpacity(.3),
+                focusColor: highlight.withOpacity(.8),
                 highlightColor: highlight.withOpacity(.5),
                 borderRadius: BorderRadius.circular(20),
                 enableFeedback: true,
                 onTap: () {
-                  onCoinTap(coinData[index]);
+                  onCoinTap(coin);
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: theme.cardColor.withOpacity(.6),
+                    gradient: LinearGradient(colors: [
+                      theme.highlightColor.withOpacity(.07),
+                      Colors.transparent,
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                    color: theme.cardColor.withOpacity(.8),
                     border: Border.all(color: highlight.withOpacity(.42)),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -129,12 +134,12 @@ class CoinList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${Formatter.formatNumber(coin.currentPrice)} \$',
+                            '\$${Formatter.formatNumber(coin.currentPrice)}',
                             style: TextStyle(
                                 color: primary, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '${priceChange != null && priceChange > 0 ? "+" : ""}'
+                            '${priceChange != null && priceChange >= 0 ? "+" : ""}'
                             '${priceChange?.toStringAsFixed(2) ?? "0"} %',
                             style: TextStyle(
                               color: priceChange != null && priceChange > 0

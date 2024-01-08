@@ -12,7 +12,7 @@ class PopupMessage extends StatelessWidget {
       backgroundColor: theme.cardColor,
       content: Text(
         message,
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: theme.primaryColor, fontSize: 15),
       ),
       actions: [
         SortingButton(

@@ -1,5 +1,7 @@
+import 'package:crypto_buddy/models/portfolio.dart';
 import 'package:crypto_buddy/models/settings.dart';
 import 'package:crypto_buddy/views/accent_colors_page.dart';
+import 'package:crypto_buddy/widgets/popup_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -117,6 +119,46 @@ class _SettingsPageState extends State<SettingsPage> {
                                   color: theme.primaryColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400))
+                        ],
+                      )),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: InkWell(
+                  hoverColor: highlight.withOpacity(.2),
+                  focusColor: highlight.withOpacity(.3),
+                  highlightColor: highlight.withOpacity(.5),
+                  borderRadius: BorderRadius.circular(20),
+                  enableFeedback: true,
+                  onTap: () {
+                    Provider.of<Portfolio>(context, listen: false)
+                        .resetPortfolio();
+                    showDialog(
+                      builder: (BuildContext context) {
+                        return const PopupMessage(
+                            message: 'Your portfolio was cleared!');
+                      },
+                      context: context,
+                    );
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: theme.cardColor.withOpacity(.6),
+                        border: Border.all(
+                            color: highlight.withOpacity(
+                                .42)), // color: Colors.grey.shade400
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Reset Portfolio',
+                              style: TextStyle(
+                                  fontSize: 16, color: theme.primaryColor)),
                         ],
                       )),
                 ),

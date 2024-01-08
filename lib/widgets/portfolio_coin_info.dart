@@ -1,13 +1,15 @@
 import 'package:crypto_buddy/models/crypto_asset.dart';
-import 'package:crypto_buddy/utils/format_number.dart'; // Assuming this utility exists for formatting numbers
+import 'package:crypto_buddy/utils/format_number.dart';
 import 'package:crypto_buddy/widgets/sorting_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/portfolio.dart';
 import '../views/manage_holdings_page.dart';
 
 class PortfolioCoinInfo extends StatelessWidget {
   final CryptoAsset asset;
-  final VoidCallback onTap; // Callback for handling taps
+  final VoidCallback onTap;
 
   const PortfolioCoinInfo(
       {super.key, required this.asset, required this.onTap});
@@ -22,14 +24,19 @@ class PortfolioCoinInfo extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: InkWell(
         hoverColor: highlight.withOpacity(.2),
-        focusColor: highlight.withOpacity(.3),
+        focusColor: highlight.withOpacity(.8),
         highlightColor: highlight.withOpacity(.5),
         borderRadius: BorderRadius.circular(20),
+        enableFeedback: true,
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
-            color: theme.cardColor,
+            gradient: LinearGradient(colors: [
+              theme.highlightColor.withOpacity(.07),
+              Colors.transparent,
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            color: theme.cardColor.withOpacity(.8),
             border: Border.all(color: highlight.withOpacity(.42)),
             borderRadius: BorderRadius.circular(20),
           ),
@@ -91,21 +98,21 @@ class PortfolioCoinInfo extends StatelessWidget {
                             color: primary, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '${asset.quantity} ${asset.coin.symbol.toUpperCase()}',
+                        '${Formatter.formatNumber(asset.quantity)} ${asset.coin.symbol.toUpperCase()}',
                         style: TextStyle(color: primary),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 15,
-                  ),
+                  const SizedBox(width: 5),
                   SortingButton(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ManageHoldingsPage(asset: asset),
+                          builder: (context) => ManageHoldingsPage(
+                            asset: asset,
+                            portfolio: Provider.of<Portfolio>(context),
+                          ),
                         ),
                       );
                     },

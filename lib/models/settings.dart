@@ -14,23 +14,17 @@ class Settings with ChangeNotifier {
 
   void setDarkMode(bool value) {
     isDarkModeOn = value;
-    notifyListeners(); // Notifying listeners about the change
+    notifyListeners();
   }
 
   void setAccentColor(String value) {
     accentColor = value;
-    notifyListeners(); // Notifying listeners about the change
-  }
-
-  void setCurrency(String value) {
-    currency = value;
-    notifyListeners(); // Notifying listeners about the change
+    notifyListeners();
   }
 
   static Future<void> saveSettings(Settings settings) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDarkModeOn', settings.isDarkModeOn);
     await prefs.setString('accentColor', settings.accentColor);
-    await prefs.setString('currency', settings.currency);
   }
 }

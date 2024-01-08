@@ -14,7 +14,7 @@ class GradientAppBar extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             theme.highlightColor.withOpacity(.2),
-            theme.highlightColor.withOpacity(.001),
+            theme.highlightColor.withOpacity(.0001),
           ],
         )),
         child: AppBar(

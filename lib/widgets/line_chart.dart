@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../utils/format_number.dart';
+
 class SparkLineChart extends StatefulWidget {
   final List<FlSpot> spots;
   const SparkLineChart({super.key, required this.spots});
@@ -62,11 +64,9 @@ class _SparkLineChartState extends State<SparkLineChart> {
           )
         ],
         titlesData: FlTitlesData(
-          // Disable the top titles
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
-          // Disable the right titles
           rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -138,10 +138,9 @@ class _SparkLineChartState extends State<SparkLineChart> {
               return touchedSpots.map((touchedSpot) {
                 final dateTime =
                     DateTime.fromMillisecondsSinceEpoch(touchedSpot.x.toInt());
-                final formattedDate =
-                    DateFormat.yMd().format(dateTime); // Format the date
+                final formattedDate = DateFormat.yMd().format(dateTime);
                 return LineTooltipItem(
-                  '$formattedDate\n${touchedSpot.y.toStringAsFixed(2)} €',
+                  '$formattedDate\n\$${Formatter.formatNumber(touchedSpot.y.toStringAsFixed(2))}',
                   TextStyle(
                     color: theme.primaryColor,
                   ),
@@ -157,10 +156,6 @@ class _SparkLineChartState extends State<SparkLineChart> {
                 const FlDotData(show: true),
               );
             }).toList();
-          },
-          touchCallback:
-              (FlTouchEvent event, LineTouchResponse? touchResponse) {
-            // Your callback logic here
           },
           handleBuiltInTouches: true,
         ),

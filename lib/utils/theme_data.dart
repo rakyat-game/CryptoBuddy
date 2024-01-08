@@ -9,9 +9,9 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: Colors.grey.shade800,
       highlightColor: accentColor,
-      cardColor: const Color(0xFFFFFDF5),
-      scaffoldBackgroundColor: const Color(0xFFFFFAF0),
-      canvasColor: const Color(0xFFFFFAF0), //Colors.white,
+      cardColor: Colors.grey.shade50, //const Color(0xFFFFFDF6),
+      scaffoldBackgroundColor: Colors.white,
+      canvasColor: Colors.transparent,
     );
   }
 
@@ -24,7 +24,7 @@ class AppTheme {
       highlightColor: accentColor,
       cardColor: Colors.grey.shade900,
       scaffoldBackgroundColor: const Color(0xFF191414), //Colors.black,
-      canvasColor: Colors.white,
+      canvasColor: Colors.transparent,
     );
   }
 
@@ -35,8 +35,8 @@ class AppTheme {
       case 'red':
         return Colors.red.shade400;
       case 'green':
-        return Colors
-            .lime; //const Color(0x0000cc33); //const Color(0x001db954);
+        return Colors.green
+            .shade500; //const Color(0x0000cc33); //const Color(0x001db954);
       case 'grey':
         return Colors.grey;
       default:

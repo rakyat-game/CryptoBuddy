@@ -23,7 +23,7 @@ class _CoinStatisticsState extends State<CoinStatistics> {
               color: color, fontWeight: FontWeight.bold, fontSize: 16),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 12.0),
+          padding: const EdgeInsets.only(left: 12.0, bottom: 6),
           child: Text(
             value,
             style: TextStyle(color: color),
@@ -50,33 +50,33 @@ class _CoinStatisticsState extends State<CoinStatistics> {
               'Market Cap',
               coin.marketCap == null
                   ? 'N/A'
-                  : '${Formatter.formatNumber(coin.marketCap)} \$',
+                  : '\$${Formatter.formatNumber(coin.marketCap)}',
               theme.primaryColor),
           buildTableRow(
               'All Time Low',
               coin.atl == null
                   ? 'N/A'
-                  : '${Formatter.formatNumber(coin.atl)} \$',
+                  : '\$${Formatter.formatNumber(coin.atl)}',
               theme.primaryColor),
           buildTableRow(
               'All Time High',
               coin.ath == null
                   ? 'N/A'
-                  : '${Formatter.formatNumber(coin.ath)} \$',
+                  : '\$${Formatter.formatNumber(coin.ath)}',
               theme.primaryColor),
           buildTableRow(
               'Circulating Supply',
               coin.circulatingSupply == null
                   ? 'N/A'
-                  : '${Formatter.formatNumber(coin.circulatingSupply)} \$',
+                  : '\$${Formatter.formatNumber(coin.circulatingSupply)}',
               theme.primaryColor),
           buildTableRow(
               'Maximum Supply',
               coin.maxSupply == null
                   ? coin.circulatingSupply == null
                       ? 'N/A'
-                      : '${Formatter.formatNumber(coin.circulatingSupply)} \$'
-                  : '${Formatter.formatNumber(coin.maxSupply)} \$',
+                      : '\$${Formatter.formatNumber(coin.circulatingSupply)}'
+                  : '\$${Formatter.formatNumber(coin.maxSupply)}',
               theme.primaryColor),
         ],
       ),

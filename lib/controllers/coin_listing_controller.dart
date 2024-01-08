@@ -8,6 +8,7 @@ import '../utils/coingecko_api.dart';
 import '../utils/favorites.dart';
 
 class CoinListingController {
+  static bool isCoinDataLoaded = false;
   final CoingeckoApiService apiService;
   late Future<List<Market>> coinData;
   late DateTime lastRefreshTime;
@@ -25,9 +26,12 @@ class CoinListingController {
   bool showFavoredCoins = false;
 
   CoinListingController({required this.apiService}) {
-    coinData = apiService.getCoins(currency: 'usd');
-    lastRefreshTime = DateTime.now();
-    refreshWaitTime = 60;
+    if (!isCoinDataLoaded) {
+      coinData = apiService.getCoins(currency: 'usd');
+      lastRefreshTime = DateTime.now();
+      refreshWaitTime = 60;
+      isCoinDataLoaded = true;
+    }
   }
 
   Future<bool> reloadData() async {

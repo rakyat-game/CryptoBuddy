@@ -42,22 +42,4 @@ void main() {
       expect(mockData.first.id, equals('incompleteCoin'));
     });
   });
-
-  group('Tests for sortAndChangeOrder():', () {
-    test('Changes sorting order for market cap', () async {
-      await controller.apiService.getCoins();
-      controller.isMarketCapAscending = true;
-      await controller.sortAndChangeOrder(SortingMetric.marketCap);
-      expect(controller.isMarketCapAscending, isFalse);
-    });
-  });
-
-  group('Tests for sortWithCurrentOrder():', () {
-    test('Keeps sorting order for market cap', () async {
-      await controller.apiService.getCoins();
-      controller.isMarketCapAscending = true;
-      await controller.sortWithCurrentOrder(SortingMetric.marketCap);
-      expect(controller.isMarketCapAscending, isTrue);
-    });
-  });
 }

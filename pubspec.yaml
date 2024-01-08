@@ -1,5 +1,5 @@
 name: crypto_buddy
-description: CryptoBuddy provides real-time data of popular digital currencies
+description: CryptoBuddy provides current data of popular digital currencies
   and allows users to build their own portfolios.
 
 publish_to: 'none'
@@ -20,7 +20,6 @@ dependencies:
   mockito: ^5.4.3
   fl_chart: ^0.65.0
   intl: ^0.18.1
-  dart_openai: ^5.0.0
   shared_preferences: ^2.2.2
 
 
@@ -29,6 +28,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.0
+  build_web_compilers: ^4.0.4
 
 flutter:
   uses-material-design: true

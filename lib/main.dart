@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:coingecko_api/data/market.dart';
-import 'package:crypto_buddy/models/crypto_asset.dart';
 import 'package:crypto_buddy/utils/theme_data.dart';
 import 'package:crypto_buddy/views/coin_listing_page.dart';
 import 'package:crypto_buddy/views/portfolio_page.dart';
@@ -12,14 +9,12 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'models/portfolio_model.dart';
+import 'models/portfolio.dart';
 import 'models/settings.dart';
 
 Future<void> main() async {
-  //HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
   runApp(
     MultiProvider(
       providers: [
@@ -33,28 +28,8 @@ Future<void> main() async {
           create: (context) => CoinDataProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => PortfolioModel(
-            investment: 2000.0,
-            assets: [
-              CryptoAsset(
-                coin: Market.fromJson({
-                  'id': 'stellar',
-                  'symbol': 'xlm',
-                  'name': 'Stellar',
-                  'current_price': 1500.0,
-                }),
-                quantity: 1,
-              ),
-              CryptoAsset(
-                coin: Market.fromJson({
-                  'id': 'cardano',
-                  'symbol': 'ada',
-                  'name': 'Cardano',
-                  'current_price': 1000.0,
-                }),
-                quantity: 1,
-              ),
-            ],
+          create: (context) => Portfolio(
+            assets: [],
           ),
         ),
       ],
@@ -129,52 +104,50 @@ class _PageSwitcherState extends State<PageSwitcher> {
               child: _pages[index]);
         }),
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min, // Use min to fit content
-        children: [
-          Divider(
-            color: theme.highlightColor
-                .withOpacity(.42), // Choose your color for the divider
-            thickness: 1,
-            height: .3, // Set the thickness of the divider
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: GNav(
-              selectedIndex: _selectedIndex,
-              onTabChange: _changeVisibility,
-              gap: 8,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              color: theme.primaryColor,
-              activeColor: theme.primaryColor,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              tabActiveBorder: Border.all(
-                  color: theme.highlightColor.withOpacity(.5), width: .5),
-              tabBackgroundColor: Colors.transparent,
-              tabBackgroundGradient: LinearGradient(colors: [
-                theme.highlightColor.withOpacity(.1),
-                theme.highlightColor.withOpacity(.02),
-              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              tabs: const [
-                GButton(icon: LineIcons.barChartAlt, text: 'Coins'),
-                GButton(icon: LineIcons.pieChart, text: 'Portfolio'),
-                GButton(icon: LineIcons.cog, text: 'Settings'),
-              ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: theme.highlightColor.withOpacity(.05),
+          // gradient: LinearGradient(
+          //     end: Alignment.topCenter,
+          //     colors: [theme.highlightColor, theme.scaffoldBackgroundColor],
+          //     begin: Alignment.bottomCenter),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Divider(
+              color: theme.highlightColor.withOpacity(.8),
+              thickness: 1,
+              height: 1,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: GNav(
+                selectedIndex: _selectedIndex,
+                onTabChange: _changeVisibility,
+                gap: 8,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                color: theme.primaryColor,
+                activeColor: theme.primaryColor,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                tabActiveBorder: Border.all(
+                    color: theme.highlightColor.withOpacity(.8), width: .75),
+                tabBackgroundColor: Colors.transparent,
+                tabBackgroundGradient: LinearGradient(colors: [
+                  theme.highlightColor.withOpacity(.2),
+                  theme.highlightColor.withOpacity(.02),
+                ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                tabs: const [
+                  GButton(icon: LineIcons.barChartAlt, text: 'Market'),
+                  GButton(icon: LineIcons.pieChart, text: 'Portfolio'),
+                  GButton(icon: LineIcons.cog, text: 'Settings'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
-  }
-}
-
-/* HttpOverrides is used to fix certificate exception on old Android-Version 7.0 (my physical test device is a Samsung 5A 2016)
-, issue is explained here: https://letsencrypt.org/docs/dst-root-ca-x3-expiration-september-2021/#:~:text=On%20September%2030%202021%2C%20there,accept%20your%20Let */
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
   }
 }
