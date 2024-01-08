@@ -41,6 +41,9 @@ class CustomInputFieldState extends State<CustomInputField> {
     String potentialNewValue = currentValue + value;
     double currentValueDouble = double.tryParse(currentValue) ?? 0.0;
     double newValueDouble = double.tryParse(potentialNewValue) ?? 0.0;
+    if (currentValue.contains('.') && value == '.') {
+      return;
+    }
     if (currentValue.contains('.') && currentValueDouble != 0.0) {
       List<String> parts = currentValue.split('.');
       if (parts.length > 1 && parts[1].length >= 2) {

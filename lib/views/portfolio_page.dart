@@ -51,7 +51,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                   mainAxisSpacing: 16,
                   children: <Widget>[
                     _buildInfoBox(
-                        'Balance',
+                        'Current Balance',
                         '\$${Formatter.formatNumber(portfolio.currentValue)}',
                         Alignment.topLeft,
                         Alignment.bottomRight),
@@ -61,7 +61,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         Alignment.topRight,
                         Alignment.bottomLeft),
                     _buildInfoBox(
-                        'Profit/Loss',
+                        'Profit / Loss',
                         '\$${Formatter.formatNumber(portfolio.profitLoss)}',
                         Alignment.bottomLeft,
                         Alignment.topRight),
