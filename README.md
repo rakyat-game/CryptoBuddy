@@ -7,7 +7,7 @@ using the [coingecko_api](https://pub.dev/packages/coingecko_api) wrapper.\
 Developed by Steven Schmitt(2025448@stud.hs-mannheim.de).
 
 <p>
-  <img src="./img/home_screen.png" alt="demo picture" width="200" />
+  <img src="./img/home_screen.png" alt="demo picture" width="199" />
   <img src="./img/info_screen.png" alt="demo picture 2" width="200" />
   <img src="./img/manage_holdings_screen.png" alt="demo picture 3" width="200" />
 </p>
