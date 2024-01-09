@@ -35,7 +35,7 @@ class AppTheme {
       case 'red':
         return Colors.red.shade400;
       case 'green':
-        return Colors.green.shade500;
+        return Colors.green.shade300;
       case 'grey':
         return Colors.grey;
       default:

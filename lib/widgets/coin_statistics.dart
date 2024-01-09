@@ -68,15 +68,15 @@ class _CoinStatisticsState extends State<CoinStatistics> {
               'Circulating Supply',
               coin.circulatingSupply == null
                   ? 'N/A'
-                  : '\$${Formatter.formatNumber(coin.circulatingSupply)}',
+                  : Formatter.formatNumber(coin.circulatingSupply),
               theme.primaryColor),
           buildTableRow(
               'Maximum Supply',
               coin.maxSupply == null
                   ? coin.circulatingSupply == null
                       ? 'N/A'
-                      : '\$${Formatter.formatNumber(coin.circulatingSupply)}'
-                  : '\$${Formatter.formatNumber(coin.maxSupply)}',
+                      : Formatter.formatNumber(coin.circulatingSupply)
+                  : Formatter.formatNumber(coin.maxSupply),
               theme.primaryColor),
         ],
       ),

@@ -61,13 +61,13 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         Alignment.topRight,
                         Alignment.bottomLeft),
                     _buildInfoBox(
-                        'Profit / Loss',
-                        '\$${Formatter.formatNumber(portfolio.profitLoss)}',
+                        'Sales',
+                        '\$${Formatter.formatNumber(portfolio.sales)}',
                         Alignment.bottomLeft,
                         Alignment.topRight),
                     _buildInfoBox(
-                        'Sales',
-                        '\$${Formatter.formatNumber(portfolio.sales)}',
+                        'Profit / Loss',
+                        '\$${Formatter.formatNumber(portfolio.profitLoss)}',
                         Alignment.bottomRight,
                         Alignment.topLeft),
                   ],
