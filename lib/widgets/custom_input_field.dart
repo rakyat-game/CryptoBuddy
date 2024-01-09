@@ -121,16 +121,15 @@ class CustomInputFieldState extends State<CustomInputField> {
       onTapCancel: () => setState(() => pressedButton = -1),
       onTap: () {
         _onButtonPressed(value);
-        setState(() => pressedButton = -1); // Reset pressed effect
+        setState(() => pressedButton = -1);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: isPressed
-              ? theme.highlightColor
-                  .withOpacity(0.5) // Darker color when pressed
-              : theme.cardColor, // Normal color
+              ? theme.highlightColor.withOpacity(0.5)
+              : theme.cardColor,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: theme.highlightColor),
         ),

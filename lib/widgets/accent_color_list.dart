@@ -17,8 +17,7 @@ class _AccentColorListState extends State<AccentColorList> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     Settings settings = Provider.of<Settings>(context);
-    String currentAccentColor =
-        settings.accentColor; // Assuming this method exists
+    String currentAccentColor = settings.accentColor;
 
     return ListView.builder(
         itemCount: accentColors.length,

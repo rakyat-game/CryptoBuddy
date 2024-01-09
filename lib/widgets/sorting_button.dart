@@ -46,7 +46,7 @@ class SortingButtonState extends State<SortingButton> {
           padding: widget.padding,
           margin: widget.margin,
           decoration: BoxDecoration(
-            color: containerColor, // use the color determined by state
+            color: containerColor,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
